@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         WifiInfo wifiInfo = wifiMan.getConnectionInfo();
         networkName.setText("Current connection level: " + WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 4));
 
-
         /*ConnectivityManager connMan = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connMan.getActiveNetworkInfo();
         networkName.setText("This is the type of network: " + info.getTypeName());*/
