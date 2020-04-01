@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.srikate.ibeacondemo.simulator.BeaconSimulatorFragment;
 import com.example.srikate.ibeacondemo.timeattendant.TimeAttendantFastFragment;
+import com.example.srikate.ibeacondemo.timeattendant.WebViewTestFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity
@@ -83,10 +84,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
-        if (id == R.id.nav_time_atten) {
-            fragment = TimeAttendantFastFragment.newInstance();
-        } else if (id == R.id.nav_simulator) {
-            fragment = BeaconSimulatorFragment.newInstance();
+        switch (id){
+            case R.id.nav_time_atten:
+                fragment = TimeAttendantFastFragment.newInstance();
+                break;
+            case R.id.nav_simulator:
+                fragment = BeaconSimulatorFragment.newInstance();
+                break;
+            case R.id.web_view_test:
+                fragment = WebViewTestFragment.newInstance();
+                break;
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
