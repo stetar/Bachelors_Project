@@ -132,7 +132,6 @@ public class TimeAttendantFastFragment extends Fragment implements View.OnClickL
 
         settingLocationRequest();
         checkLocationPermission();
-        getBeaconDevice();
 
         if (isLocationEnabled()) {
             gps = new GPSTracker(getContext());
@@ -420,7 +419,7 @@ public class TimeAttendantFastFragment extends Fragment implements View.OnClickL
 
             if (!isOnline()) {
                 isValid = false;
-                UiHelper.showInformationMessage(getContext(), "No Internet Access.", "Please , check your connection.", false);
+                UiHelper.showInformationMessage(getContext(), "No Internet Access.", "Please, check your connection.", false);
             }
 
             if (isValid) {
@@ -582,11 +581,5 @@ public class TimeAttendantFastFragment extends Fragment implements View.OnClickL
                 Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
                 break;
         }
-    }
-
-    public void getBeaconDevice() {
-        //Get form your service
-        this.beaconDeviceList.add("954e6dac-5612-4642-b2d1-d253429db36b");
-        this.beaconDeviceList.add("2f234454-cf6d-4a0f-adf2-f4911ba9ffa6");
     }
 }
