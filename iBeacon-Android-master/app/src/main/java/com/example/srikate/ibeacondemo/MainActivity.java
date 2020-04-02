@@ -15,9 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.srikate.ibeacondemo.simulator.BeaconSimulatorFragment;
-import com.example.srikate.ibeacondemo.timeattendant.TimeAttendantFastFragment;
-import com.example.srikate.ibeacondemo.timeattendant.WebViewTestFragment;
+import com.example.srikate.ibeacondemo.fragments.BeaconSimulatorFragment;
+import com.example.srikate.ibeacondemo.fragments.StartingFragment;
+import com.example.srikate.ibeacondemo.fragments.TimeAttendantFastFragment;
+import com.example.srikate.ibeacondemo.fragments.WebViewTestFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TimeAttendantFastFragment fragment = TimeAttendantFastFragment.newInstance();
+        StartingFragment fragment = StartingFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.contentFrame, fragment, "FINDER").disallowAddToBackStack().commit();
     }

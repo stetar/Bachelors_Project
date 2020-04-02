@@ -68,6 +68,15 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
         return beaconList.size();
     }
 
+    public void updateBeacon(int major, int minor, int signal){
+        for (BeaconDeviceModel b: beaconList){
+            if(b.getMajor() == major && b.getMinor() == minor){
+                b.setSignal(signal);
+                sortBySignal();
+            }
+        }
+    }
+
     public boolean checkUnique(int major, int minor){
         for (BeaconDeviceModel b: beaconList) {
             if(b.getMajor() == major && b.getMinor() == minor){

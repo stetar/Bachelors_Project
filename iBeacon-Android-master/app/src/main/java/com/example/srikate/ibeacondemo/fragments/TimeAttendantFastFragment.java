@@ -1,4 +1,4 @@
-package com.example.srikate.ibeacondemo.timeattendant;
+package com.example.srikate.ibeacondemo.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -34,19 +34,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.srikate.ibeacondemo.R;
 import com.example.srikate.ibeacondemo.model.BeaconDeviceModel;
 import com.example.srikate.ibeacondemo.model.BeaconListModel;
-import com.example.srikate.ibeacondemo.model.CheckInModel;
 import com.example.srikate.ibeacondemo.model.LocationModel;
 import com.example.srikate.ibeacondemo.utils.GPSTracker;
 import com.example.srikate.ibeacondemo.utils.UiHelper;
@@ -61,14 +56,11 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.altbeacon.beacon.Beacon;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -314,10 +306,12 @@ public class TimeAttendantFastFragment extends Fragment implements View.OnClickL
             if (uuid.equalsIgnoreCase(device)) {
                 Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "located");
                 if (!myAdapter.checkUnique(major, minor)){
-                    Snackbar.make(checkInBtn, "Beacon already listed", Snackbar.LENGTH_SHORT).show();
+                    myAdapter.updateBeacon(major, minor, strength);
+                    Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "updated");
                 }
                 else{
                     saveToList(major, minor, strength);
+                    Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "added to list");
                 }
             } else {
                 Log.i(TAG, "Its not TISCO Beacon");

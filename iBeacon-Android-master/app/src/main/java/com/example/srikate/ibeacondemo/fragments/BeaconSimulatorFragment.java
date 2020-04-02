@@ -1,4 +1,4 @@
-package com.example.srikate.ibeacondemo.simulator;
+package com.example.srikate.ibeacondemo.fragments;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
