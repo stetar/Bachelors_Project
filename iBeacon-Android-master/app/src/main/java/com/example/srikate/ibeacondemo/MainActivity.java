@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.srikate.ibeacondemo.fragments.BeaconSimulatorFragment;
+import com.example.srikate.ibeacondemo.fragments.QRFragment;
 import com.example.srikate.ibeacondemo.fragments.StartingFragment;
 import com.example.srikate.ibeacondemo.fragments.TimeAttendantFastFragment;
 import com.example.srikate.ibeacondemo.fragments.WebViewTestFragment;
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.web_view_test:
                 fragment = WebViewTestFragment.newInstance();
+                break;
+            case R.id.qr_scanner:
+                fragment = QRFragment.newInstance();
                 break;
         }
 

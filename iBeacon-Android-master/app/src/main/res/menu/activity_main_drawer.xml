@@ -6,6 +6,10 @@
             android:id="@+id/web_view_test"
             android:title="WebView Test" />
         <item
+            android:id="@+id/qr_scanner"
+            android:title="QR-code Scanner"
+            />
+        <item
             android:id="@+id/nav_time_atten"
             android:icon="@drawable/time_atte_icon"
             android:title="@string/time_attendant" />

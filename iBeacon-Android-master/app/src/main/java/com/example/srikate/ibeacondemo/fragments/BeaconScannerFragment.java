@@ -1,4 +1,4 @@
-package com.example.srikate.ibeacondemo.scanner;
+package com.example.srikate.ibeacondemo.fragments;
 
 import android.Manifest;
 import android.content.Context;

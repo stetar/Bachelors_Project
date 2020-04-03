@@ -75,7 +75,7 @@ public class TimeAttendantFastFragment extends Fragment implements View.OnClickL
 
     private static final String TAG = "TimeAttendantFast";
 
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 30000;
     private BluetoothLeScanner mLEScanner;
     private BluetoothManager btManager;
     private BluetoothAdapter btAdapter;
@@ -302,20 +302,14 @@ public class TimeAttendantFastFragment extends Fragment implements View.OnClickL
 
         final LocationModel locationModel = new LocationModel(getLat(), getLon());
 
-        for (String device : beaconDeviceList) {
-            if (uuid.equalsIgnoreCase(device)) {
-                Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "located");
-                if (!myAdapter.checkUnique(major, minor)){
-                    myAdapter.updateBeacon(major, minor, strength);
-                    Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "updated");
-                }
-                else{
-                    saveToList(major, minor, strength);
-                    Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "added to list");
-                }
-            } else {
-                Log.i(TAG, "Its not TISCO Beacon");
-            }
+        Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "located");
+        if (!myAdapter.checkUnique(major, minor)){
+            myAdapter.updateBeacon(major, minor, strength);
+            Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "updated");
+        }
+        else{
+            saveToList(major, minor, strength);
+            Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "added to list");
         }
     }
 

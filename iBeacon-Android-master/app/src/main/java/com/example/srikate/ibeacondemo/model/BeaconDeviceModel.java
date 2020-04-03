@@ -43,7 +43,7 @@ public class BeaconDeviceModel implements Comparable {
     public int compareTo(Object b) {
         if (b instanceof BeaconDeviceModel){
             int compareSignal = ((BeaconDeviceModel) b).getSignal();
-            return this.getSignal() - compareSignal;
+            return compareSignal - this.getSignal() ;
         }
         return 0;
     }
