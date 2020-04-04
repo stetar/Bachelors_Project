@@ -3,6 +3,7 @@ package com.example.srikate.ibeacondemo.fragments;
 import android.Manifest;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.IpSecManager;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -42,6 +45,7 @@ public class QRFragment extends Fragment {
     private TextView textView;
     private CameraSource cameraSource;
     private BarcodeDetector barcodeDetector;
+    private Barcode.UrlBookmark url;
 
     public static QRFragment newInstance() {
         return new QRFragment();
@@ -118,6 +122,24 @@ public class QRFragment extends Fragment {
                             Vibrator vibrator = (Vibrator)getContext().getSystemService(Context.VIBRATOR_SERVICE);
                             //vibrator.vibrate(300);
                             textView.setText(qrCodes.valueAt(0).displayValue);
+
+                            //If barcode is an url format. URL value format = 8
+                            if(qrCodes.valueAt(0).valueFormat == 8){
+                                url = qrCodes.valueAt(0).url;
+                                Bundle bundle=new Bundle();
+                                bundle.putString("url", url.url);
+                                //set Fragmentclass Arguments
+                                WebViewTestFragment fragobj = new WebViewTestFragment();
+                                fragobj.setArguments(bundle);
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+
+                                fragmentManager.beginTransaction().replace(R.id.contentFrame, fragobj).commit();
+
+                                //DrawerLayout drawer = (DrawerLayout) getActivity().get.findViewById(R.id.drawer_layout);
+                                //drawer.closeDrawer(GravityCompat.START);
+                                //getActivity().startActivity(intent);
+                            }
                         }
                     });
                 }
@@ -126,4 +148,6 @@ public class QRFragment extends Fragment {
 
         return v;
     }
+
+
 }

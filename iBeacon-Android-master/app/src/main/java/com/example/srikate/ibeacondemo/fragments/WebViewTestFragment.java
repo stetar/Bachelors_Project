@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,7 +28,7 @@ import com.example.srikate.ibeacondemo.R;
 public class WebViewTestFragment extends Fragment{
 
     private WebView webview;
-
+    private String url;
     public static WebViewTestFragment newInstance() {
         return new WebViewTestFragment();
     }
@@ -35,7 +36,11 @@ public class WebViewTestFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        try {
+            url = getArguments().getString("url");
+        } catch (NullPointerException e){
+            Log.d("Bundle", "Bundle is null");
+        }
 
     }
 
@@ -57,7 +62,13 @@ public class WebViewTestFragment extends Fragment{
         View v = inflater.inflate(R.layout.web_view, container, false);
         webview = (WebView) v.findViewById(R.id.webview);
         webview.setWebViewClient(new WebViewClient());
-        webview.loadUrl("http://www.google.com");
+
+        if (url != null){
+            webview.loadUrl(url);
+        } else {
+            webview.loadUrl("https://www.google.com");
+        }
+
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
