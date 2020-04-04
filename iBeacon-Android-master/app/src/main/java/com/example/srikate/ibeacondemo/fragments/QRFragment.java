@@ -59,8 +59,8 @@ public class QRFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.qr_scanner, container, false);
 
-        surfaceView = (SurfaceView) v.findViewById(R.id.camerapreview);
-        textView = (TextView) v.findViewById(R.id.textView);
+        surfaceView = v.findViewById(R.id.camerapreview);
+        textView = v.findViewById(R.id.textView);
         final Context c = getContext();
         barcodeDetector = new BarcodeDetector.Builder(c)
                 .setBarcodeFormats(Barcode.QR_CODE).build();
@@ -71,7 +71,7 @@ public class QRFragment extends Fragment {
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                //requestPermissions(new String[]{Manifest.permission.CAMERA}, );
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
                 if(ContextCompat.checkSelfPermission(c, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
                     Log.d("PERMISSIONS", "Camera permission not granted");
                     requestPermissions(
