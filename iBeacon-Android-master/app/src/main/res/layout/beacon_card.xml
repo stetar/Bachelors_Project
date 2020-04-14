@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,6 +9,24 @@
     android:padding="4dp"
     app:barrierMargin="4dp"
     app:cardCornerRadius="4dp">
+
+    <TextView
+        android:id="@+id/cardFrequentValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/cardFrequentLabel"
+        app:layout_constraintTop_toTopOf="@+id/cardFrequentLabel" />
+
+    <TextView
+        android:id="@+id/cardFrequentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Most Frequent:"
+        app:layout_constraintStart_toStartOf="@+id/cardRangeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/cardRangeLabel" />
 
     <TextView
         android:id="@+id/cardMajorLabel"
@@ -48,21 +67,39 @@
         app:layout_constraintTop_toTopOf="@+id/cardMinorLabel" />
 
     <TextView
-        android:id="@+id/cardSSLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/signal_strength"
-        app:layout_constraintStart_toStartOf="@+id/cardMinorLabel"
-        app:layout_constraintTop_toBottomOf="@+id/cardMinorLabel" />
-
-    <TextView
-        android:id="@+id/cardSSValue"
+        android:id="@+id/cardRangeValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/cardSSLabel"
-        app:layout_constraintTop_toTopOf="@+id/cardSSLabel" />
+        app:layout_constraintStart_toEndOf="@+id/cardRangeLabel"
+        app:layout_constraintTop_toTopOf="@+id/cardRangeLabel" />
+
+    <TextView
+        android:id="@+id/cardAverageValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/cardAverageLabel"
+        app:layout_constraintTop_toTopOf="@+id/cardAverageLabel" />
+
+    <TextView
+        android:id="@+id/cardAverageLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Average:"
+        app:layout_constraintStart_toEndOf="@+id/cardRangeValue"
+        app:layout_constraintTop_toTopOf="@+id/cardRangeValue" />
+
+    <TextView
+        android:id="@+id/cardRangeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Range:"
+        app:layout_constraintStart_toStartOf="@+id/cardMinorLabel"
+        app:layout_constraintTop_toBottomOf="@+id/cardMinorLabel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

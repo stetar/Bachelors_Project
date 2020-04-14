@@ -39,13 +39,15 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
     }
 
     public static class BeaconViewHolder extends RecyclerView.ViewHolder{
-        public TextView minor, major, signal;
+        public TextView minor, major, range, average, frequent;
 
         public BeaconViewHolder(View itemView, final OnItemClickListener listener){
             super(itemView);
             minor = itemView.findViewById(R.id.cardMinorValue);
             major = itemView.findViewById(R.id.cardMajorValue);
-            signal = itemView.findViewById(R.id.cardSSValue);
+            range = itemView.findViewById(R.id.cardRangeValue);
+            average = itemView.findViewById(R.id.cardAverageValue);
+            frequent = itemView.findViewById(R.id.cardFrequentValue);
         }
     }
 
@@ -60,7 +62,9 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
         BeaconDeviceModel beacon = beaconList.get(position);
         holder.major.setText(Integer.toString(beacon.getMajor()));
         holder.minor.setText(Integer.toString(beacon.getMinor()));
-        holder.signal.setText(Integer.toString(beacon.getSignal()));
+        holder.frequent.setText(Integer.toString(beacon.getMostFrequent()));
+        holder.average.setText(Integer.toString(beacon.getAverage()));
+        holder.range.setText(beacon.getSmallest() + " - " + beacon.getLargest());
     }
 
     @Override
@@ -68,11 +72,18 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
         return beaconList.size();
     }
 
+    public void PostResults(){
+        for (BeaconDeviceModel b: beaconList){
+            b.updateResults();
+
+        }
+        notifyDataSetChanged();
+    }
+
     public void updateBeacon(int major, int minor, int signal){
         for (BeaconDeviceModel b: beaconList){
             if(b.getMajor() == major && b.getMinor() == minor){
-                b.setSignal(signal);
-                sortBySignal();
+                b.addToMeasures(signal);
             }
         }
     }

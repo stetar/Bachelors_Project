@@ -26,4 +26,64 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"/>
 
+    <TextView
+        android:id="@+id/RSSI_range_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:text="Range:" />
+
+    <TextView
+        android:id="@+id/RSSI_most_frequent_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/RSSI_range_label"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:text="Most frequent:" />
+
+    <TextView
+        android:id="@+id/RSSI_average_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/RSSI_most_frequent_label"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:text="Average:" />
+
+    <TextView
+        android:id="@+id/RSSI_range_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/RSSI_range_label"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/RSSI_range_label"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RSSI_most_frequent_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/RSSI_most_frequent_label"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="-1dp"
+        android:layout_toEndOf="@+id/RSSI_most_frequent_label"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RSSI_average_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/RSSI_average_label"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/RSSI_average_label"
+        android:text="TextView" />
+
 </RelativeLayout>

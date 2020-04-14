@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.example.srikate.ibeacondemo.fragments.BeaconSimulatorFragment;
 import com.example.srikate.ibeacondemo.fragments.QRFragment;
 import com.example.srikate.ibeacondemo.fragments.StartingFragment;
-import com.example.srikate.ibeacondemo.fragments.TimeAttendantFastFragment;
+import com.example.srikate.ibeacondemo.fragments.BeaconScannerFragment;
 import com.example.srikate.ibeacondemo.fragments.WebViewTestFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity
                 return true;
             case R.id.action_list_size:
                 Fragment tempFrag = getSupportFragmentManager().findFragmentByTag("FINDER");
-                if (tempFrag instanceof TimeAttendantFastFragment){
-                    Toast.makeText(this, "Current list size: " + ((TimeAttendantFastFragment) tempFrag).listAccess().getItemCount(), Toast.LENGTH_SHORT).show();
+                if (tempFrag instanceof BeaconScannerFragment){
+                    Toast.makeText(this, "Current list size: " + ((BeaconScannerFragment) tempFrag).listAccess().getItemCount(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (id){
             case R.id.nav_time_atten:
-                fragment = TimeAttendantFastFragment.newInstance();
+                fragment = BeaconScannerFragment.newInstance();
                 break;
             case R.id.nav_simulator:
                 fragment = BeaconSimulatorFragment.newInstance();
