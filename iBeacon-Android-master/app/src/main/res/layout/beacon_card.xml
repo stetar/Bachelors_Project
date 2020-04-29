@@ -20,6 +20,15 @@
         app:layout_constraintTop_toTopOf="@+id/cardFrequentLabel" />
 
     <TextView
+        android:id="@+id/cardTXValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/cardTXLabel"
+        app:layout_constraintTop_toTopOf="@+id/cardTXLabel" />
+
+    <TextView
         android:id="@+id/cardFrequentLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,6 +36,15 @@
         android:text="Most Frequent:"
         app:layout_constraintStart_toStartOf="@+id/cardRangeLabel"
         app:layout_constraintTop_toBottomOf="@+id/cardRangeLabel" />
+
+    <TextView
+        android:id="@+id/cardTXLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TXPower:"
+        app:layout_constraintStart_toEndOf="@+id/cardFrequentValue"
+        app:layout_constraintTop_toTopOf="@+id/cardFrequentValue" />
 
     <TextView
         android:id="@+id/cardMajorLabel"

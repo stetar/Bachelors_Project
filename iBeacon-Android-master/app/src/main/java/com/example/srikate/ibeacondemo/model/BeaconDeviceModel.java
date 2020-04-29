@@ -14,13 +14,14 @@ import java.util.Map;
  */
 
 public class BeaconDeviceModel implements Comparable {
-    private int minor, major, signal, average, smallest, largest, mostFrequent;
+    private int minor, major, signal, average, smallest, largest, mostFrequent, tx;
     private ArrayList<Integer> measures = new ArrayList<>();
 
-    public BeaconDeviceModel(int major, int minor, int signal){
+    public BeaconDeviceModel(int major, int minor, int signal, int tx){
         this.minor = minor;
         this.major = major;
         this.signal = signal;
+        this.tx = tx;
         average = 0;
         smallest = 0;
         largest = 0;
@@ -69,6 +70,10 @@ public class BeaconDeviceModel implements Comparable {
 
     public void addToMeasures(int value){measures.add(value);}
 
+    public int getTx() {return tx;}
+
+    public void setTx(int tx) {this.tx = tx;}
+
     @Override
     public int compareTo(Object b) {
         if (b instanceof BeaconDeviceModel){
@@ -79,15 +84,17 @@ public class BeaconDeviceModel implements Comparable {
     }
 
     public void updateResults(){
-        smallest = Collections.min(measures);
-        largest = Collections.max(measures);
-        int temp = 0;
-        for (Integer i : measures){
-            temp = temp + i;
+        if (measures.size() > 0){
+            smallest = Collections.min(measures);
+            largest = Collections.max(measures);
+            int temp = 0;
+            for (Integer i : measures){
+                temp = temp + i;
+            }
+            average = temp / measures.size();
+            mostFrequent = mostCommon(measures);
+            measures.clear();
         }
-        average = temp / measures.size();
-        mostFrequent = mostCommon(measures);
-        measures.clear();
     }
 
 

@@ -39,7 +39,7 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
     }
 
     public static class BeaconViewHolder extends RecyclerView.ViewHolder{
-        public TextView minor, major, range, average, frequent;
+        public TextView minor, major, range, average, frequent, tx;
 
         public BeaconViewHolder(View itemView, final OnItemClickListener listener){
             super(itemView);
@@ -48,6 +48,7 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
             range = itemView.findViewById(R.id.cardRangeValue);
             average = itemView.findViewById(R.id.cardAverageValue);
             frequent = itemView.findViewById(R.id.cardFrequentValue);
+            tx = itemView.findViewById(R.id.cardTXValue);
         }
     }
 
@@ -65,6 +66,7 @@ public class BeaconListModel extends RecyclerView.Adapter<BeaconListModel.Beacon
         holder.frequent.setText(Integer.toString(beacon.getMostFrequent()));
         holder.average.setText(Integer.toString(beacon.getAverage()));
         holder.range.setText(beacon.getSmallest() + " - " + beacon.getLargest());
+        holder.tx.setText(Integer.toString(beacon.getTx()));
     }
 
     @Override

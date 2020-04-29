@@ -57,6 +57,8 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.altbeacon.beacon.distance.DistanceCalculator;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +77,7 @@ import static android.app.Activity.RESULT_OK;
  * required : targetSdkVersion 21
  */
 
-@TargetApi(21)
+@TargetApi(26)
 public class BeaconScannerFragment extends Fragment implements View.OnClickListener, ResultCallback<LocationSettingsResult> {
 
     private static final String TAG = "TimeAttendantFast";
@@ -251,8 +253,13 @@ public class BeaconScannerFragment extends Fragment implements View.OnClickListe
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             Log.i(TAG, "callbackType " + callbackType);
+            Log.i(TAG, "onScanResult: " + result.TX_POWER_NOT_PRESENT);
             byte[] scanRecord = result.getScanRecord().getBytes();
-            findBeaconPattern(scanRecord, result.getRssi());
+            int tx = 0;
+            if (Build.VERSION.SDK_INT >= 26){
+                tx = result.getTxPower();
+            }
+            findBeaconPattern(scanRecord, result.getRssi(), tx);
         }
 
         @Override
@@ -277,11 +284,11 @@ public class BeaconScannerFragment extends Fragment implements View.OnClickListe
     private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
-            findBeaconPattern(scanRecord, rssi);
+            findBeaconPattern(scanRecord, rssi, 0);
         }
     };
 
-    private void findBeaconPattern(byte[] scanRecord, int strength) {
+    private void findBeaconPattern(byte[] scanRecord, int strength, int txPower) {
         int startByte = 2;
         boolean patternFound = false;
         while (startByte <= 5) {
@@ -292,6 +299,8 @@ public class BeaconScannerFragment extends Fragment implements View.OnClickListe
             }
             startByte++;
         }
+
+        Log.i(TAG, "findBeaconPattern: " + scanRecord);
 
         if (patternFound) {
             //Convert to hex String
@@ -312,12 +321,12 @@ public class BeaconScannerFragment extends Fragment implements View.OnClickListe
             // minor
             final int minor = (scanRecord[startByte + 22] & 0xff) * 0x100 + (scanRecord[startByte + 23] & 0xff);
 
-            Log.i(TAG, "UUID: " + uuid + "\\nmajor: " + major + "\\nminor" + minor);
-            foundBeacon(uuid, major, minor, strength);
+            Log.i(TAG, "UUID: " + uuid + "\nmajor: " + major + "\nminor" + minor);
+            foundBeacon(uuid, major, minor, strength, txPower);
         }
     }
 
-    private void foundBeacon(String uuid, final int major, final int minor, final int strength) {
+    private void foundBeacon(String uuid, final int major, final int minor, final int strength, final int txPower) {
 
         final LocationModel locationModel = new LocationModel(getLat(), getLon());
 
@@ -331,15 +340,16 @@ public class BeaconScannerFragment extends Fragment implements View.OnClickListe
             Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "updated");
         }
         else{
-            saveToList(major, minor, strength);
+
+            saveToList(major, minor, strength, txPower);
             Log.d(TAG, "foundBeacon: Beacon (" + major + " , " + minor + "added to list");
         }
 
     }
 
-    private void saveToList(int major, int minor, int signal) {
+    private void saveToList(int major, int minor, int signal, int tx) {
         int position = myAdapter.getItemCount();
-        BeaconDeviceModel temp = new BeaconDeviceModel(major, minor, signal);
+        BeaconDeviceModel temp = new BeaconDeviceModel(major, minor, signal, tx);
         beaconList.add(position, temp);
         //myAdapter.sortBySignal();
         Snackbar.make(checkInBtn, "Added beacon (" + major + " , " + minor + ") to list", Snackbar.LENGTH_SHORT).show();

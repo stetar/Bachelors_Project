@@ -69,18 +69,20 @@ public class BeaconSimulatorFragment extends Fragment implements View.OnClickLis
     }
 
     private void setupBeacon() {
+        int tx = -Integer.valueOf(signalSelect.getText().toString());
         beacon = new Beacon.Builder()
                 .setBluetoothName("TEST_BEACON")
                 .setId1(getString(R.string.beacon_uuid_simulator)) // UUID for beacon
                 .setId2(majorSelect.getText().toString()) // Major for beacon
                 .setId3(minorSelect.getText().toString()) // Minor for beacon
                 .setManufacturer(0x004C) // Radius Networks.0x0118  Change this for other beacon layouts//0x004C for iPhone
-                .setTxPower(-Integer.valueOf(signalSelect.getText().toString())) // Power in dB
+                .setTxPower(tx) // Power in dB
                 .setDataFields(Arrays.asList(new Long[]{0l})) // Remove this for beacon layouts without d: fields
                 .build();
 
         beaconTransmitter = new BeaconTransmitter (getActivity(), new BeaconParser()
                 .setBeaconLayout ("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        beaconTransmitter.setAdvertiseTxPowerLevel(tx);
     }
 
     @Nullable
