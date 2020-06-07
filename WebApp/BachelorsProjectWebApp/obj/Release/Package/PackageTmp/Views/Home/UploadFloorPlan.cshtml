@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "UploadFloorPlan";
+    Layout = null;
+}
+@model BachelorsProjectWebApp.Models.FloorModel
+
+<body>
+
+    @using (Html.BeginForm("UploadFloorPlan", "Home", FormMethod.Post))
+    { 
+    <label>Floor Name</label> <br>
+    @Html.TextBoxFor(m => m.FloorName)<br>
+    <label>img URL</label><br>
+    @Html.TextBoxFor(m => m.Floorplan)<br>
+    <input type="submit" value="Upload URL" />
+    }
+
+    <p>Click the upload button to upload the floorplan to the database.</p>
+
+</body>
+
+<script>
+    function onButtonPressed() {
+        var url = document.getElementById("url").value;
+        window.location.href = "/Home/EditPlan?imgurl=" + url;
+    }
+</script>

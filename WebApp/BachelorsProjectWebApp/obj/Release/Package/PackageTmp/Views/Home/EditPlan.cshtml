@@ -1,0 +1,322 @@
+﻿
+@{
+    ViewBag.Title = "EditPlan";
+    Layout = null;
+}
+@model List<BachelorsProjectWebApp.Models.OfficeModel>
+
+<div style="position: relative;">
+    <canvas id="canvas1" style="position: absolute; left: 0; top: 0; z-index: -2;"></canvas>
+    <canvas id="canvas2" style="position: absolute; left: 0; top: 0; z-index: -1;"></canvas>
+</div>
+<div>
+    <button style="height: 50px;width: 70px; vertical-align: top;" onclick="beaconsToggle()">Add Beacon</button>
+    <button style="        height: 50px;
+        width: 70px;
+        vertical-align: top;
+" onclick="tracksToggle()">Add Track</button>
+    <button style="height:50px;width:50px" onclick="reset()">Reset</button>
+    <button style="height:50px;width:50px" onclick="save()">Save</button>
+</div>
+<div class="form-popup" id="popup-Form">
+    <form style="padding-top:15px" action="javascript:createBeacon();" class="form-container" id="form">
+
+        <input type="number" placeholder="Major" name="major" required><br /><div style="padding-top:10px"> </div>
+        <input type="number" placeholder="Minor" name="minor" required><br /><div style="padding-top:10px"> </div>
+        Office number: @Html.DropDownList("offices", Model.Select(office => new SelectListItem() { Text=office.OfficeNumber.ToString(), Value=office.OfficeID.ToString() }), new { id="offices" })<br /><div style="padding-top:10px"> </div>
+        <button type="submit" class="btn">Create Beacon</button>
+        <button type="submit" class="btn cancel" onclick="cancelForm()">Cancel</button>
+    </form>
+</div>
+@Scripts.Render("~/bundles/jquery")
+<script>
+
+    window.onresize = function () { location.reload(); }
+
+    //Initializing canvas and ctx
+    var canvas1 = document.getElementById("canvas1");
+    var canvas2 = document.getElementById("canvas2")
+
+    var ctx1 = canvas1.getContext("2d");
+    var ctx2 = canvas2.getContext("2d");
+
+    //Sets canvas width and height
+    canvas1.width = window.innerWidth -17;
+    canvas1.height = window.innerHeight -17;
+    canvas2.width = window.innerWidth -17;
+    canvas2.height = window.innerHeight -17;
+
+    var background = new Image();
+    background.src = '@ViewBag.imgurl';
+    var xOffset;
+    var yOffset;
+    var currentPosition = 1;
+    var destination = 9;
+    var beaconButtonPressed = false;
+    var trackButtonPressed = false;
+    var formOpen = false;
+
+    var bx = [];
+    var by = [];
+    var tx = [];
+    var ty = [];
+    var bClicks = 0;
+    var tClicks = 0;
+    var officeIDs = [];
+    var beaconMajorMinor = [];
+    var beaconButtonClickCheck = false;
+    var trackButtonClickCheck = false;
+
+    console.log("1st offset: " + xOffset)
+
+    //Onload function
+    background.onload = function () {
+        //getPositions();
+        closeForm();
+        drawVisuals(currentPosition, destination);
+    }
+
+    function beaconsToggle() {
+        beaconButtonPressed = true;
+        trackButtonPressed = false;
+        trackButtonClickCheck = false;
+        console.log("Pressed Beacon button")
+    }
+
+    function tracksToggle() {
+        beaconButtonPressed = false;
+        trackButtonPressed = true;
+        beaconButtonClickCheck = false;
+        console.log("Pressed Track button")
+    }
+
+    function openForm() {
+        document.getElementById("popup-Form").style.display = "block";
+    }
+    function closeForm() {
+        document.getElementById("popup-Form").style.display = "none";
+    }
+
+    function cancelForm() {
+        closeForm();
+        beaconButtonClickCheck = false;
+    }
+
+    function scalePixels(pixel, hw) {
+        if (hw === "h") {
+            let pictureheight = window.innerHeight - 17 - yOffset - yOffset;
+            let picturePixel = pixel - yOffset;
+            return (picturePixel / pictureheight).toFixed(3);
+        } else if (hw == "w") {
+            let pictureWidth = window.innerWidth - 17  - xOffset - xOffset;
+            let picturePixel = pixel - xOffset;
+            return (picturePixel / pictureWidth).toFixed(3);
+        } else {
+            console.log("Error in 'hw' parameter in scalePixels()");
+        }
+    }
+
+    function bPositionToString() {
+        var str = "";
+        for (var i = 0; i < bx.length; i++) {
+            if (i == 0) {
+                str = scalePixels(bx[i], "w") + "," + scalePixels(by[i], "h");
+
+            } else {
+                str = str + " " + scalePixels(bx[i], "w") + "," + scalePixels(by[i], "h");
+
+            }
+
+        }
+        console.log("bPositionToString return: " + str);
+        return str;
+    }
+
+    function tPositionToString() {
+        var str = "";
+        for (var i = 0; i < tx.length; i++) {
+            if (i == 0) {
+                str = scalePixels(tx[i], "w") + "," + scalePixels(ty[i], "h");
+            } else {
+                str = str + " " + scalePixels(tx[i], "w") + "," + scalePixels(ty[i], "h");
+            }
+
+        }
+        return str;
+    }
+
+    function bIdentifiersToString() {
+        var str = "";
+        for (var i = 0; i < beaconMajorMinor.length; i++) {
+            if (i == 0) {
+                str = beaconMajorMinor[i] + " ";
+            } else {
+                str = str + beaconMajorMinor[i] + " ";
+            }
+        }
+        return str;
+    }
+
+    function officeIDsToString() {
+        var str = "";
+        for (var i = 0; i < officeIDs.length; i++) {
+            if (i == 0) {
+                str = officeIDs[i] + " ";
+            } else {
+                str = str + officeIDs[i] + " ";
+            }
+        }
+        return str;
+    }
+
+    function save() {
+        var bMinorMajorStr = bIdentifiersToString();
+        var bStr = bPositionToString();
+        var tStr = tPositionToString();
+        var officeId = officeIDsToString();
+        beaconButtonClickCheck = false;
+        trackButtonClickCheck = false;
+
+        var url = "@Url.Action("EditPlan","Home")";
+
+        var model = { OfficeIDString: officeId, FloorID: @ViewBag.FloorID, beaconIDString: bMinorMajorStr, beaconPosString: bStr, trackPosString: tStr };
+
+        $.post(url, model, function (res) {
+            //res contains the markup returned by the partial view
+            //You probably want to set that to some Div.
+            console.log(res)
+        });
+
+
+
+        //window.location.href = "EditPlan?" + "beaconIdentifiers=" + bMinorMajorStr + "&beaconpositions=" + bStr + "&trackpositions=" + tStr;
+    }
+
+    //Draws circle based on color, fill, x-coordinate, y-coordinate and size in radius/diameter?
+    function drawCircle(color, fill, x, y, size) {
+        ctx2.beginPath();
+        ctx2.arc(x, y, size, 0, 2 * Math.PI);
+
+        if (fill) {
+            ctx2.fillStyle = color;
+            ctx2.fill();
+        }
+
+        ctx2.stroke();
+    }
+
+    //Function called when pressing create beacon button in form. Gets values in form and appends major and minor to array.
+    function createBeacon() {
+        var form = document.getElementById("form");
+        var major = form.elements.major.value;
+        var minor = form.elements.minor.value;
+
+        //bClicks - 2 = 0 because bClicks will have value 2 when this function is called.
+        beaconMajorMinor[bClicks - 1] = major + "," + minor;
+        officeIDs[bClicks - 1] = $( "#offices" ).val();
+        console.log("beaconMajorMinor: " + beaconMajorMinor[bClicks - 1]);
+        //Closes the form again and sets formOpen = false.
+        form.reset();
+        closeForm();
+        formOpen = false;
+        beaconButtonClickCheck = false;
+        beaconButtonPressed = false;
+
+        ctx2.fillStyle = "red";
+        ctx2.font = "bold 16px Arial";
+        ctx2.fillText(major + "," + minor, bx[bClicks - 1] - 10, by[bClicks - 1] - 20);
+        bPositionToString();
+    }
+
+    //Both onClick() and printMousePos() is called upon clicking a button, but onClick is faster than printMousePos(event) so beware of boolean checks in this function.
+    function printMousePos(event) {
+        console.log("Offset: " + xOffset)
+        console.log("X: " + window.innerWidth);
+        console.log("clientX: " + event.clientX);
+        if (beaconButtonPressed) {
+
+            //if clicking the beacon button
+            if (!beaconButtonClickCheck) {
+                beaconButtonClickCheck = true;
+                return;
+            }
+
+            if (formOpen) {
+                return;
+            }
+
+            drawCircle("blue", true, event.clientX, event.clientY, 10);
+
+            //If the form is already open, return, so that no new circles are drawn before they are filled
+            openForm();
+            formOpen = true;
+
+            //increment beacon clicks and store x, y coordinates
+            bClicks++;
+            bx[bClicks-1] = event.clientX;
+            by[bClicks-1] = event.clientY;
+            console.log("bClicks: " + bClicks);
+            console.log("bx[]:" + bx[bClicks - 1]);
+
+        } else if (trackButtonPressed) {
+
+            //if clicking the track button
+            if (!trackButtonClickCheck) {
+                trackButtonClickCheck = true;
+                return;
+            }
+            drawCircle("", false, event.clientX, event.clientY, 20);
+
+            //increment track clicks and store x, y
+            tClicks++;
+            tx[tClicks - 1] = event.clientX;
+            ty[tClicks - 1] = event.clientY;
+        }
+    }
+
+    document.addEventListener("click", printMousePos);
+
+    function reset() {
+        beaconButtonPressed = false;
+        trackButtonPressed = false;
+        formOpen = false;
+        closeForm();
+        beaconButtonClickCheck = false;
+        trackButtonClickCheck = false;
+        bClicks = 0;
+        tClicks = 0;
+        bx = [];
+        by = [];
+        tx = [];
+        ty = [];
+        beaconMajorMinor = [];
+        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+    }
+
+    function drawHardcodedTrack() {
+        for (var i = 0; i < 5; i++) {
+
+        }
+    }
+
+
+    function drawVisuals(currentPosition, destination) {
+        var scale = background.width / background.height;
+        console.log(scale);
+        //ctx1.drawImage(background,0,0);
+        var newWidth = canvas1.width;
+        var newHeight = newWidth / scale;
+        if (newHeight > canvas1.height) {
+            newHeight = canvas1.height;
+            newWidth = newHeight * scale;
+        }
+        xOffset = newWidth < canvas1.width ? ((canvas1.width - newWidth) / 2) : 0;
+        yOffset = newHeight < canvas1.height ? ((canvas1.height - newHeight) / 2) : 0;
+
+        ctx1.drawImage(background, xOffset, yOffset, newWidth, newHeight);
+
+
+        //drawCircles(xOffset + newWidth/2, newHeight/10, 10, newWidth/12, currentPosition, destination);
+    }
+
+</script>

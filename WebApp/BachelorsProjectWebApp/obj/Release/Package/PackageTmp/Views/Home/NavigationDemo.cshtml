@@ -1,0 +1,188 @@
+﻿@{
+	ViewBag.Title = "NavigationDemo";
+	Layout = null;
+}
+@model BachelorsProjectWebApp.Models.NavigationModel
+
+@Scripts.Render("~/bundles/jquery")
+
+<div style="position: relative;">
+	<canvas id="canvas1" style="position: absolute; left: 0; top: 0; z-index: -2;"></canvas>
+	<canvas id="canvas2" style="position: absolute; left: 0; top: 0; z-index: -1;"></canvas>
+</div>
+
+<script>
+
+	var beaconObject = @Html.Raw(Json.Encode(Model.beaconlist));
+	var trackObject = @Html.Raw(Json.Encode(Model.tracklist));
+	var beaconPosX = [];
+	var beaconPosY = [];
+    var Beacon_ids = [];
+	var trackPosX = [];
+	var trackPosY = [];
+
+	var canvas1 = document.getElementById("canvas1");
+    var ctx1 = canvas1.getContext("2d");
+    var beaconID;
+
+	var xOffset;
+    var yOffset;
+	var newWidth;
+	var newHeight;
+
+    var currentPosition;
+    var destination = @ViewBag.demo_id;
+
+    var background = new Image();
+	background.src = '@ViewBag.imgurl';
+
+	$(document).ready(function () {
+
+		console.log(beaconObject);
+		Android.startScanning();
+    });
+
+	window.onresize = function () { location.reload(); }
+
+
+	background.onload = function () {
+        canvas1.width = window.innerWidth - 17;
+		canvas1.height = window.innerHeight - 17;
+
+		calculateOffset();
+        convertObjectsToCoordinates(xOffset, yOffset);
+        drawVisuals(currentPosition, destination);
+	}
+
+	function convertObjectsToCoordinates(xOffset, yOffset) {
+		for (var i = 0; i < beaconObject.length; i++) {
+			beaconPosX[i] = Math.round(beaconObject[i].xPos  * (window.innerWidth - 17 - (2 * xOffset)) + xOffset);
+			beaconPosY[i] = Math.round(beaconObject[i].yPos  * (window.innerHeight - 17 - (2 * yOffset)) + yOffset);
+			Beacon_ids[i] = beaconObject[i].beaconId;
+		}
+
+		for (var j = 0; j < trackObject.length; j++) {
+			trackPosX[j] = Math.round(trackObject[j].xPos  * (window.innerWidth - 17 - (2 * xOffset)) + xOffset);
+            trackPosY[j] = Math.round(trackObject[j].yPos  * (window.innerHeight - 17 - (2 * yOffset)) + yOffset);
+		}
+
+    }
+
+	//Updates position every 5 seconds
+    const updater = window.setInterval(function () {
+        retrieveBestBeacon();
+    }, 2000);
+    //Use clearInterval(updater); to stop the interval again
+
+	function startScanning() {
+		Android.startScanning();
+	}
+
+	function stopScanning() {
+		Android.stopScanning();
+	}
+
+	function retrieveBestBeacon() {
+        beaconID = Android.retrieveBestBeacon();
+		Android.showToast(beaconID);
+		for (var i = 0; i < Beacon_ids.length; i++) {
+				if (Beacon_ids[i] === beaconID) {
+                    drawVisuals(i, destination);
+				}
+			}
+	}
+
+	function showAndroidToast(toast) {
+
+		if (beaconID) {
+			Android.showToast(beaconID);
+
+			for (var i = 0; i < Beacon_ids.length; i++) {
+				if (Beacon_ids[i] === beaconID) {
+					drawVisuals(i, destination);
+				}
+			}
+		} else {
+			var x = Android.showToast(toast);
+			Android.showToast(x);
+		}
+
+	}
+
+	function calculateOffset() {
+        var scale = background.width / background.height;
+        console.log(scale);
+        //ctx1.drawImage(background,0,0);
+        newWidth = canvas1.width;
+        newHeight = newWidth / scale;
+        if (newHeight > canvas1.height) {
+            newHeight = canvas1.height;
+            newWidth = newHeight * scale;
+        }
+        xOffset = newWidth < canvas1.width ? ((canvas1.width - newWidth) / 2) : 0;
+        yOffset = newHeight < canvas1.height ? ((canvas1.height - newHeight) / 2) : 0;
+    }
+
+
+	function drawVisuals(currentPosition, destination) {
+		ctx1.drawImage(background, xOffset, yOffset, newWidth, newHeight);
+
+		drawTrackCircles(newWidth / 25, currentPosition, destination);
+		//drawBeaconCircles(newWidth / 35);
+		//drawCircles(xOffset + newWidth / 5, newHeight / 8, 4, newWidth / 25, currentPosition, destination);
+	}
+
+	function drawBeaconCircles(circleRadius) {
+        var canvas2 = document.getElementById("canvas2")
+        var ctx2 = canvas2.getContext("2d");
+        canvas2.width = window.innerWidth - 17;
+        canvas2.height = window.innerHeight - 17;
+
+		for (var i = 0; i < beaconObject.length; i++) {
+
+			ctx2.beginPath();
+			ctx2.arc(beaconPosX[i], beaconPosY[i], circleRadius, 0, 2 * Math.PI)
+			ctx2.fillStyle = "blue";
+			ctx2.fill();
+			ctx2.stroke();
+        }
+    }
+
+	function drawTrackCircles(circleRadius, currentPosition, destination) {
+		var canvas2 = document.getElementById("canvas2")
+		var ctx2 = canvas2.getContext("2d");
+		canvas2.width = window.innerWidth - 17;
+		canvas2.height = window.innerHeight - 17;
+
+
+		for (i = 0; i < trackObject.length; i++) {
+
+			if (i == currentPosition) {
+				ctx2.beginPath();
+				ctx2.arc(trackPosX[i], trackPosY[i], circleRadius, 0, 2 * Math.PI);
+				ctx2.fillStyle = "red";
+				ctx2.fill();
+				ctx2.stroke();
+			} else if (i == destination) {
+				ctx2.beginPath();
+                ctx2.arc(trackPosX[i], trackPosY[i], circleRadius, 0, 2 * Math.PI);
+				ctx2.fillStyle = "green";
+				ctx2.fill();
+				ctx2.stroke();
+			} else if (currentPosition == destination) {
+				ctx2.font = "30px Arial";
+                ctx2.fillText("You have reached your destination", 10, 50);
+                Android.vibrate();
+				clearInterval(updater);
+                stopScanning();
+                Android.showToast("You have reached your destination!")
+			} else {
+				ctx2.beginPath();
+                ctx2.arc(trackPosX[i], trackPosY[i], circleRadius, 0, 2 * Math.PI);
+				ctx2.stroke();
+			}
+		}
+
+	}
+
+</script>
