@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1041465294810",
+    "firebase_url": "https://bluetoothdevelopmentdebugtool.firebaseio.com",
+    "project_id": "bluetoothdevelopmentdebugtool",
+    "storage_bucket": "bluetoothdevelopmentdebugtool.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041465294810:android:099bbc5d643c014d324ae3",
+        "android_client_info": {
+          "package_name": "com.example.srikate.ibeacondemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041465294810-f5ritl4t7cp9p08766656m5hh6g5hlbv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbADfbnlk-Pip3B6h2gKtqHyJyYjAfidM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041465294810-f5ritl4t7cp9p08766656m5hh6g5hlbv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
